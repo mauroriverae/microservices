@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  mr-ms-rabbitmq-service:
+    container_name: mr-ms-rabbitmq-service
+    image: rabbitmq:3-management
+    ports:
+       # Port for RabbitMQ message communication
+      - 5672:5672
+      # Port for RabbitMQ management web interface
+      - 15672:15672
+    networks:
+      - mr-microservices-network
+
+networks:
+  mr-microservices-network:
+    external: true

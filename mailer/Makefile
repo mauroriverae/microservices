@@ -42,7 +42,7 @@ prepare: ## Runs backend commands
 	$(MAKE) migrations
 # Backend commands
 composer-install: ## Installs composer dependencies
-	U_ID=${UID} docker exec --user ${UID} -it ${DOCKER_BE} composer install --no-interaction]
+	U_ID=${UID} docker exec --user ${UID} -it ${DOCKER_BE} composer install --no-interaction
 
 migrations:
 	U_ID=${UID} docker exec --user ${UID} -it ${DOCKER_BE} composer install --no-interaction
