@@ -1,0 +1,34 @@
+version: '3.5'
+
+services:
+  mr-ms-register-service-web:
+    container_name: mr-ms-register-service-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - 1000:80
+    volumes:
+      - ./public:/appdata/www/public
+    depends_on:
+      - mr-ms-register-service-be
+    networks:
+      - mr-microservices-network
+
+  mr-ms-register-service-be:
+    container_name: mr-ms-register-service-be
+    build:
+      context: docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    env_file:
+      - .env
+    networks:
+      - mr-microservices-network
+
+networks:
+  mr-microservices-network:
+    external: true
