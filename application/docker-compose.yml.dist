@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  mr-ms-application-service-web:
+    container_name: mr-ms-application-service-web
+    build:
+      context: ./docker/nginx
+      args:
+        UID: $U_ID
+    ports:
+      - 1100:80
+    volumes:
+      - ./public:/appdata/www/public
+    depends_on:
+      - mr-ms-application-service-be
+    networks:
+      - mr-microservices-network
+
+  mr-ms-application-service-be:
+    container_name: mr-ms-application-service-be
+    build:
+      context: docker/php
+      args:
+        UID: $U_ID
+    volumes:
+      - ./:/appdata/www
+    env_file:
+      - .env
+    depends_on:
+      - mr-ms-application-service-db
+    networks:
+      - mr-microservices-network
+
+  mr-ms-application-service-db:
+    container_name: mr-ms-application-service-db
+    build:
+      context: ./docker/database
+    ports:
+      - 10100:3306
+    environment:
+      MYSQL_DATABASE: application_database
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mr-ms-application-service-db-data:/var/lib/mysql
+    networks:
+      - mr-microservices-network
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+
+volumes:
+  mr-ms-application-service-db-data:
+networks:
+  mr-microservices-network:
+    external: true
